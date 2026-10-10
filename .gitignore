@@ -1,0 +1,27 @@
+# Credenciales y configuración local
+.env
+.env.*
+*.pem
+*.key
+
+# Dependencias, cachés y bytecode
+node_modules/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mcp-test/
+.obsidian/
+.pi/
+.railway/
+
+# Estado operativo del laboratorio (solo el log canónico es entregable)
+output/*
+!output/experimentos.jsonl
+*.log
+*.pid
+
+# Archivos de editor y sistema
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

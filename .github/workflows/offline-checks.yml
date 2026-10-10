@@ -1,0 +1,30 @@
+name: Offline checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  replica:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.13'
+      - name: Unit tests
+        run: python -m unittest discover -s services/replica -p 'test_*.py' -v
+      - name: Evidence-backed domain replay
+        run: python services/replica/audit_observed.py
+      - name: Evidence-backed HTTP replay
+        run: python services/replica/audit_http_observed.py
+      - name: Delivery preflight
+        run: python tools/release_preflight.py
+      - name: Entrypoint smoke test
+        run: python tools/smoke_runtime.py

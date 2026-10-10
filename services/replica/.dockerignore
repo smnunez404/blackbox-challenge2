@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+test_*.py
+audit_observed.py
+*.md
+*.ps1
+.env*

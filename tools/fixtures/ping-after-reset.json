@@ -1,0 +1,14 @@
+{
+  "steps": [
+    {
+      "request": {"method": "POST", "path": "/__reset", "body": {}},
+      "status": 200,
+      "response": {"ok": true}
+    },
+    {
+      "request": {"method": "POST", "path": "/msg", "body": {"m": "PING;64"}},
+      "status": 200,
+      "response": {"pong": true}
+    }
+  ]
+}
