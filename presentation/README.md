@@ -33,4 +33,4 @@ Sirve esta carpeta con cualquier servidor estático y abre su `index.html`. No h
 
 ## Despliegue
 
-Proyecto Vercel: `caja-negra-reto-2`. Raíz estática; sin dependencias o variables de entorno. La página permite descargar el diagrama, la especificación, el guion para recorrer la landing, el guion de diapositivas y el log de 868 filas.
+Proyecto Vercel: `caja-negra-reto-2`. Raíz estática; sin dependencias o variables de entorno. La página permite descargar el diagrama, la especificación, el guion para recorrer la landing, el guion de diapositivas y el log de 868 filas. La sección `Demo Day` enlaza de forma visible al video público de presentación en YouTube.
