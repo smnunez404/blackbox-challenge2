@@ -17,10 +17,10 @@ function renderDetail(item) {
   detailEl.innerHTML = `<p class="eyebrow">${esc(item.version)} · ${esc(item.id)}</p>
     <h3>${esc(item.command)} <span class="status-code ${item.status >= 400 ? "bad" : ""}">Código HTTP ${esc(item.status)}</span></h3>
     <p>${esc(item.note)}</p>
-    <p class="detail-meta">${esc(item.compare || "Evidencia del corpus público")}</p>
+    <p class="detail-meta">${esc(item.compare || window.siteI18n?.t("Evidencia del corpus público") || "Evidencia del corpus público")}</p>
     <div class="code-panels">
-      <div class="code-panel"><span>Solicitud · POST /msg</span><pre>${esc(JSON.stringify(item.request, null, 2))}</pre></div>
-      <div class="code-panel"><span>Respuesta · datos recibidos</span><pre>${esc(JSON.stringify(item.response, null, 2))}</pre></div>
+      <div class="code-panel"><span>${window.siteI18n?.t("Solicitud · POST /msg") || "Solicitud · POST /msg"}</span><pre>${esc(JSON.stringify(item.request, null, 2))}</pre></div>
+      <div class="code-panel"><span>${window.siteI18n?.t("Respuesta · datos recibidos") || "Respuesta · datos recibidos"}</span><pre>${esc(JSON.stringify(item.response, null, 2))}</pre></div>
     </div>`;
   renderList();
 }
@@ -32,9 +32,11 @@ function renderList() {
     const haystack = `${item.id} ${item.version} ${item.command} ${JSON.stringify(item.request)} ${JSON.stringify(item.response)} ${item.note}`.toLowerCase();
     return (!q || haystack.includes(q)) && (!command || item.command === command);
   });
-  countEl.textContent = `${filtered.length} de ${evidence.length} ejemplos encontrados`;
+  const found = window.siteI18n?.language === "en" ? "examples found" : "ejemplos encontrados";
+  countEl.textContent = `${filtered.length} ${window.siteI18n?.language === "en" ? "of" : "de"} ${evidence.length} ${found}`;
   if (!filtered.length) {
-    listEl.innerHTML = `<p class="evidence-footnote">No hay coincidencias. Prueba otro comando o código.</p>`;
+    const empty = window.siteI18n?.language === "en" ? "No matches. Try another command or code." : "No hay coincidencias. Prueba otro comando o código.";
+    listEl.innerHTML = `<p class="evidence-footnote">${empty}</p>`;
     return;
   }
   listEl.innerHTML = filtered.map(item => {
@@ -53,7 +55,11 @@ function renderList() {
 fetch(evidenceUrl, { credentials: "omit", cache: "force-cache" })
   .then(response => { if (!response.ok) throw new Error("evidencia no disponible"); return response.json(); })
   .then(rows => { evidence = rows; renderList(); renderDetail(rows[0]); })
-  .catch(() => { countEl.textContent = "No se pudo cargar la muestra"; listEl.textContent = "Recarga la página para intentar abrir el archivo estático de evidencia."; });
+  .catch(() => { countEl.textContent = window.siteI18n?.language === "en" ? "The sample could not be loaded" : "No se pudo cargar la muestra"; listEl.textContent = window.siteI18n?.language === "en" ? "Reload the page to try opening the static evidence file." : "Recarga la página para intentar abrir el archivo estático de evidencia."; });
 
 searchEl.addEventListener("input", renderList);
 filterEl.addEventListener("change", renderList);
+window.addEventListener("languagechange", () => {
+  renderList();
+  renderDetail(evidence.find(item => String(item.id) === String(selectedId)) || evidence[0]);
+});

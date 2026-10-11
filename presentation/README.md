@@ -1,6 +1,6 @@
 # Micrositio de presentación — La caja negra
 
-Sitio estático, en español, para explicar el Reto 2, mostrar evidencia V1/V2 y presentar cómo se trabajó. Incluye un recorrido narrado de la landing page, ocho diapositivas navegables y un guion de expositor separado, oculto al proyectar o imprimir.
+Sitio estático bilingüe para explicar el Reto 2, mostrar evidencia V1/V2 y presentar cómo se trabajó. La experiencia comienza en inglés y permite cambiar a español desde el selector EN/ES. Incluye un recorrido narrado de la landing page, ocho diapositivas navegables y un guion de expositor separado, oculto al proyectar o imprimir.
 
 ## Arquitectura
 

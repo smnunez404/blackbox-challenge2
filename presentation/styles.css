@@ -20,4 +20,11 @@
 .demo-watch{position:absolute;z-index:2;right:18px;bottom:16px;color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-shadow:0 1px 8px #10213a}
 @media(max-width:760px){.demo-grid{grid-template-columns:1fr}.demo-thumbnail{min-width:0}.demo-play{width:66px;height:66px;font-size:25px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+.language-switch{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;font:10px var(--mono);color:#91a19e;letter-spacing:.08em}
+.language-switch button{border:0;background:transparent;color:#91a19e;padding:4px 2px;font:inherit;letter-spacing:inherit;cursor:pointer}
+.language-switch button[aria-pressed="true"]{color:#ffd06a;font-weight:700;text-decoration:underline;text-underline-offset:4px}
+.language-switch button:hover,.language-switch button:focus-visible{color:#fff;outline:none}
+.deck-topbar .language-switch{margin-left:4px}
+@media(max-width:950px){.language-switch{order:4}.deck-topbar .language-switch{order:initial}}
+@media(max-width:680px){.topbar .language-switch{margin-left:auto}.deck-topbar .language-switch{margin-left:0}}
 @media print{body.print-slides{background:white}.print-slides .topbar,.print-slides main>section:not(#presentacion),.print-slides .footer,.print-slides #presentacion .section-heading,.print-slides .slide-controls{display:none!important}.print-slides #presentacion{display:block!important;background:white;padding:0}.print-slides #presentacion .section-shell{width:100%;margin:0}.print-slides .slides-viewport{background:white;color:#111;overflow:visible;padding:0;margin:0}.print-slides .slide,.print-slides .slide.active{display:flex!important;flex-direction:column;justify-content:center;min-height:95vh;page-break-after:always;border:0;padding:8vw}.print-slides .slide h3{font-size:42pt}.print-slides .slide>p:not(.slide-number):not(.speaker-note){color:#333;font-size:17pt}.print-slides .speaker-note{background:#eee;color:#222}.print-slides .slide-number{color:#146f64}@page{size:landscape;margin:0}}

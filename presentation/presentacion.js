@@ -26,7 +26,7 @@
     const padded = String(humanIndex).padStart(2, '0');
     if (counter) counter.textContent = `${humanIndex} / ${slides.length}`;
     if (indexLabel) indexLabel.textContent = `${padded} / ${String(slides.length).padStart(2, '0')}`;
-    if (titleLabel) titleLabel.textContent = slides[current].dataset.title || `Diapositiva ${humanIndex}`;
+    if (titleLabel) titleLabel.textContent = window.siteI18n?.t(slides[current].dataset.title || `Diapositiva ${humanIndex}`) || slides[current].dataset.title || `Slide ${humanIndex}`;
     if (progressFill) progressFill.style.width = `${(humanIndex / slides.length) * 100}%`;
     if (progress) progress.setAttribute('aria-valuenow', String(humanIndex));
     if (previous) previous.disabled = current === 0;
@@ -50,7 +50,7 @@
   speakerNotesButton?.addEventListener('click', () => {
     const visible = player.classList.toggle('speaker-notes-visible');
     speakerNotesButton.setAttribute('aria-pressed', String(visible));
-    speakerNotesButton.textContent = visible ? 'Ocultar guion del expositor' : 'Mostrar guion del expositor';
+    speakerNotesButton.textContent = visible ? (window.siteI18n?.t('Ocultar guion del expositor') || 'Hide speaker script') : (window.siteI18n?.t('Mostrar guion del expositor') || 'Show speaker script');
   });
   document.getElementById('print-deck')?.addEventListener('click', () => {
     document.body.classList.add('printing');
@@ -58,8 +58,15 @@
   });
   window.addEventListener('afterprint', () => document.body.classList.remove('printing'));
   document.addEventListener('fullscreenchange', () => {
-    const label = document.fullscreenElement ? 'Salir de pantalla completa' : 'Pantalla completa';
+    const label = document.fullscreenElement ? (window.siteI18n?.t('Salir de pantalla completa') || 'Exit full screen') : (window.siteI18n?.t('Pantalla completa') || 'Full screen');
     if (fullscreenButton) fullscreenButton.textContent = label;
+  });
+  window.addEventListener('languagechange', () => {
+    showSlide(current);
+    if (speakerNotesButton) {
+      const visible = player.classList.contains('speaker-notes-visible');
+      speakerNotesButton.textContent = visible ? (window.siteI18n?.t('Ocultar guion del expositor') || 'Hide speaker script') : (window.siteI18n?.t('Mostrar guion del expositor') || 'Show speaker script');
+    }
   });
   document.addEventListener('keydown', (event) => {
     if (event.altKey || event.ctrlKey || event.metaKey) return;

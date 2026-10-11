@@ -1,14 +1,15 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101b24">
-  <meta name="description" content="Qué hacía un servicio sin manual, cómo se reconstruyó, qué cambió en su nueva versión y qué sigue pendiente.">
-  <title>La caja negra — caso de ingeniería inversa</title>
+  <meta name="description" content="What a service without a manual did, how it was rebuilt, what changed in its new version, and what remains open.">
+  <title>The Black Box — reverse engineering case</title>
   <link rel="icon" href="data:,">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/audience-theme.css">
+  <script defer src="/i18n.js"></script>
   <script defer src="/app.js"></script>
 </head>
 <body>
@@ -26,6 +27,11 @@
       <a href="/presentacion.html">Diapositivas</a>
     </nav>
     <span class="status-pill"><i aria-hidden="true"></i> CORTE · 20:30 BOL · 10 OCT 2026</span>
+    <div class="language-switch" aria-label="Language selector">
+      <button type="button" data-language-choice="en" aria-pressed="true">EN</button>
+      <span aria-hidden="true">/</span>
+      <button type="button" data-language-choice="es" aria-pressed="false">ES</button>
+    </div>
   </header>
 
   <main id="contenido">
