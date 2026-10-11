@@ -19,6 +19,8 @@ El [documento de diseño](docs/systems-design-reto-2.pdf), el [diagrama de arqui
 
 La [guía de despliegue](docs/despliegue.md) describe una sola instancia, variables de entorno, verificaciones y el cuidado especial de `/health` autenticado.
 
+La presentación pública está en [`presentation/`](presentation/). Es un sitio estático con la explicación del reto, la arquitectura, la estrategia de investigación, los hallazgos, el guion del expositor y los artefactos descargables. En Vercel, configura `presentation` como **Root Directory** para que el proyecto publique `index.html`.
+
 Los [scripts propios](tools/README.md) generan mutaciones limitadas, comparan secuencias y revisan la estructura del paquete. El runner permite tráfico solo hacia una réplica en loopback; el proceso desplegado no incluye herramientas de consulta al original.
 
 ## Verificación local

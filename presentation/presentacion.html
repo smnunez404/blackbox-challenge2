@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f7fb">
+  <meta name="description" content="Presentación para público: qué hacía el servicio, qué se reconstruyó, estrategia de pruebas, arquitectura y cambios observados.">
+  <title>Presentación — La caja negra</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/audience-theme.css">
+  <script defer src="/presentacion.js"></script>
+</head>
+<body class="deck-body">
+  <a class="skip-link" href="#diapositivas">Saltar a las diapositivas</a>
+  <header class="deck-topbar">
+    <a class="wordmark" href="/" aria-label="Volver al caso"><span class="mark">∎</span> LA CAJA NEGRA <span class="wordmark-light">/ R2</span></a>
+    <span class="deck-topline">RETO DE RECONSTRUCCIÓN · 8 DIAPOSITIVAS</span>
+    <a class="deck-back" href="/">Volver al caso ↗</a>
+  </header>
+
+  <main id="contenido" class="deck-shell">
+    <section class="deck-cover" aria-labelledby="deck-cover-title">
+      <p class="eyebrow">RETO 02 · SISTEMA SIN MANUAL</p>
+      <h1 id="deck-cover-title">La caja negra</h1>
+      <p>Qué servicio heredamos, cómo lo reconstruimos y qué pudimos comprobar.</p>
+      <div class="deck-cover-meta">
+        <span>PARA JURADO · VIDEO DE HASTA 2 MIN</span>
+        <a href="/guion-presentacion-por-diapositiva.md" download>Descargar guion ↓</a>
+        <button class="deck-start" id="start-presentation" type="button">Presentar a pantalla completa ↗</button>
+      </div>
+    </section>
+
+    <section class="deck-player" id="diapositivas" aria-label="Presentación del proyecto">
+      <div class="deck-status"><span id="deck-index" aria-live="polite">01 / 08</span><span id="deck-title-status">El reto</span></div>
+      <div class="deck-progress" role="progressbar" aria-label="Progreso de la presentación" aria-valuemin="1" aria-valuemax="8" aria-valuenow="1"><span id="deck-progress-fill"></span></div>
+
+      <div class="deck-stage" id="deck-stage">
+        <article class="deck-slide active" data-title="El reto" aria-hidden="false">
+          <div class="slide-main">
+            <p class="slide-kicker">01 · EL RETO</p>
+            <h2>La caja negra</h2>
+            <p class="slide-subtitle">Un servicio antiguo, sin manual ni código disponible</p>
+            <p class="slide-body">El proveedor cambió un sistema que llevaba diez años funcionando y no explicó qué modificó. El desafío fue descubrirlo y construir un reemplazo independiente.</p>
+          </div>
+          <aside class="slide-speaker-notes" aria-label="Guion del expositor"><p class="speaker-notes-label">GUION DEL EXPOSITOR</p><p>Este reto nos presentó un servicio de diez años, sin código ni manual. Cuando apareció una versión nueva sin aviso, debíamos descubrir sus reglas y crear un reemplazo independiente.</p></aside>
+        </article>
+
+        <article class="deck-slide" data-title="Qué hacía el servicio" aria-hidden="true">
+          <div class="slide-main">
+            <p class="slide-kicker">02 · EL SERVICIO ORIGINAL</p>
+            <h2>Una caja de cuentas y movimientos</h2>
+            <p class="slide-subtitle">Órdenes por POST /msg; respuestas con datos o errores</p>
+            <div class="deck-command-grid">
+              <div><b>Crear</b><span>cuentas</span></div><div><b>Consultar</b><span>saldos</span></div>
+              <div><b>Depositar</b><span>dinero</span></div><div><b>Transferir</b><span>entre cuentas</span></div>
+              <div><b>Anular</b><span>operaciones</span></div><div><b>Validar</b><span>datos y controles</span></div>
+            </div>
+            <p class="slide-footnote"><code>POST /msg</code> <code>{"m":"TRANSFER;AC-0001;AC-0002;40000;86"}</code> → <code>200 {"status":"recieved","operacionId":"OP-0002"}</code>. Una transferencia aceptada queda registrada con un número de operación.</p>
+          </div>
+          <aside class="slide-speaker-notes" aria-label="Guion del expositor"><p class="speaker-notes-label">GUION DEL EXPOSITOR</p><p>El servicio permitía crear cuentas, consultar saldos, depositar, transferir y anular operaciones. Aquí enviamos 40 mil entre dos cuentas; la respuesta asigna OP-0002.</p></aside>
+        </article>
+
+        <article class="deck-slide" data-title="Qué se debía copiar" aria-hidden="true">
+          <div class="slide-main">
+            <p class="slide-kicker">03 · QUÉ SIGNIFICA “RESPONDER IGUAL”</p>
+            <h2>Se copia lo que se ve, no cómo está hecho</h2>
+            <div class="slide-rule"><strong>El código</strong><span>Por ejemplo, 200, 400 o 422.</span></div>
+            <div class="slide-rule"><strong>La respuesta</strong><span>Los datos, sus tipos y sus mensajes.</span></div>
+            <div class="slide-rule"><strong>Lo que queda guardado</strong><span>Una operación puede cambiar el saldo y la siguiente respuesta.</span></div>
+            <p class="slide-footnote">Cada secuencia comienza de nuevo para que la comparación sea justa.</p>
+          </div>
+          <aside class="slide-speaker-notes" aria-label="Guion del expositor"><p class="speaker-notes-label">GUION DEL EXPOSITOR</p><p>Replicar no era adivinar el código interno, sino igualar lo visible: estado HTTP, respuesta JSON y efectos sobre la siguiente solicitud. Comparamos secuencias desde el mismo estado.</p></aside>
+        </article>
+
+        <article class="deck-slide" data-title="Método y herramientas" aria-hidden="true">
+          <div class="slide-main">
+            <p class="slide-kicker">04 · MÉTODO Y HERRAMIENTAS</p>
+            <h2>Investigar con método.</h2>
+            <div class="slide-rule"><strong>Pruebas</strong><span>Reiniciar, cambiar un dato y comparar secuencias.</span></div>
+            <div class="slide-rule"><strong>Herramientas</strong><span>Codex, modelos Luna y Sol, y programas propios.</span></div>
+            <div class="slide-rule"><strong>Memoria</strong><span>Obsidian enlaza fuentes, hallazgos y decisiones entre sesiones.</span></div>
+            <div class="harness-brief"><strong>Seis roles definidos.</strong> Un arnés fija meta, límites, evidencia y revisión.</div>
+            <p class="slide-footnote">No se ejecutó la tanda de 10 agentes: el límite interno lo impidió. Hubo revisiones puntuales.</p>
+          </div>
+          <aside class="slide-speaker-notes" aria-label="Guion del expositor"><p class="speaker-notes-label">GUION DEL EXPOSITOR</p><p>Probamos cambios pequeños y registramos cada intento. Codex, con los modelos Luna y Sol, apoyó el análisis; Obsidian conservó fuentes y decisiones. Definimos seis roles, pero no pudimos ejecutar diez agentes en paralelo. El generador solo preparaba variantes.</p></aside>
+        </article>
+
+        <article class="deck-slide" data-title="Arquitectura" aria-hidden="true">
+          <div class="slide-main">
+            <p class="slide-kicker">05 · ARQUITECTURA</p>
+            <h2>Dos caminos, separados</h2>
+            <div class="architecture-lane">
+              <p class="lane-label">INVESTIGACIÓN · ANTES DE LA ENTREGA</p>
+              <p><strong>Banco de pruebas</strong> consulta al servicio original y guarda la evidencia. Luego compara la misma secuencia con una réplica de prueba.</p>
+            </div>
+            <div class="architecture-divider"><span>EL ORIGINAL NO SE USA EN LA RÉPLICA</span></div>
+            <div class="architecture-lane architecture-lane-live">
+              <p class="lane-label">SERVICIO ENTREGADO</p>
+              <p><strong>Evaluador → entrada → reglas → memoria propia → respuesta.</strong> La réplica recibe órdenes y mantiene sus propias cuentas y operaciones.</p>
+            </div>
+            <p class="slide-footnote">El servicio entregado nunca llama al sistema del proveedor.</p>
+          </div>
+          <aside class="slide-speaker-notes" aria-label="Guion del expositor"><p class="speaker-notes-label">GUION DEL EXPOSITOR</p><p>Separamos el banco de investigación del servicio entregado. El primero comparaba el original con la réplica local; el reemplazo mantiene su propio estado y no llama al proveedor.</p></aside>
+        </article>
+
+        <article class="deck-slide" data-title="Cambios en la nueva versión" aria-hidden="true">
+          <div class="slide-main">
+            <p class="slide-kicker">06 · CAMBIOS EN LA NUEVA VERSIÓN</p>
+            <h2>Dos diferencias comprobadas</h2>
+            <div class="comparison">
+              <div><p class="comparison-label">SALDO MOSTRADO</p><p class="comparison-values"><span>ANTES&nbsp; 40000</span><b>→</b><span>AHORA&nbsp; “400.00”</span></p><p>El número se volvió texto decimal; en los casos comparados, se divide por 100.</p></div>
+              <div><p class="comparison-label">TRANSFERENCIA · IMPORTE 100000</p><p class="comparison-values"><span>ANTES&nbsp; ACEPTADA</span><b>→</b><span>AHORA&nbsp; 422</span></p><p>La nueva versión devuelve el error E506: “límite excedido”.</p></div>
+            </div>
+            <p class="slide-footnote">Caso comparado: <code>TRANSFER;AC-0001;AC-0002;100000;12</code> (log, IDs 863 y 866–868).</p>
+          </div>
+          <aside class="slide-speaker-notes" aria-label="Guion del expositor"><p class="speaker-notes-label">GUION DEL EXPOSITOR</p><p>En V2 confirmamos dos diferencias. En los casos probados, 40000 pasó a «400.00». Una transferencia concreta de 100000 pasó de aceptada a 422 E506. El límite general sigue desconocido.</p></aside>
+        </article>
+
+        <article class="deck-slide" data-title="Efectos y preguntas abiertas" aria-hidden="true">
+          <div class="slide-main">
+            <p class="slide-kicker">07 · EFECTOS EN CADENA Y DUDAS</p>
+            <h2>Un cambio afecta lo que viene después</h2>
+            <p class="slide-body">Al rechazarse una transferencia, OP-0003 no se crea. Al intentar anularla, el servicio responde que no existe; la siguiente operación recibe ese número.</p>
+            <div class="slide-callout"><strong>Una consecuencia no demuestra una regla nueva.</strong></div>
+            <p class="slide-body">El aviso menciona tres cambios. La evidencia confirma dos comportamientos distintos; una tercera regla independiente no quedó identificada.</p>
+            <p class="slide-footnote">E402 y los números de operación posteriores son efectos del rechazo observado.</p>
+          </div>
+          <aside class="slide-speaker-notes" aria-label="Guion del expositor"><p class="speaker-notes-label">GUION DEL EXPOSITOR</p><p>El rechazo impidió crear OP-0003; por eso falló su anulación y cambió el siguiente identificador. Es una cascada, no una tercera regla confirmada. La tercera diferencia anunciada quedó sin aislar.</p></aside>
+        </article>
+
+        <article class="deck-slide" data-title="Resultado" aria-hidden="true">
+          <div class="slide-main">
+            <p class="slide-kicker">08 · RESULTADO</p>
+            <h2>Se entregó una réplica; no se demostró equivalencia completa</h2>
+            <p class="slide-subtitle">Primera evaluación reservada: <strong>22 de 100</strong></p>
+            <div class="slide-rule"><strong>Qué se entregó</strong><span>Un servicio independiente y evidencia documentada.</span></div>
+            <div class="slide-rule"><strong>Qué queda abierto</strong><span>La tercera regla y muchas combinaciones no observadas.</span></div>
+            <p class="slide-footnote">Los resultados conocidos no demuestran que todos los casos sean iguales.</p>
+          </div>
+          <aside class="slide-speaker-notes" aria-label="Guion del expositor"><p class="speaker-notes-label">GUION DEL EXPOSITOR</p><p>La primera evaluación oculta fue 22 de 100. Salud, reinicio y un ejemplo público pasaron, pero no prueban equivalencia completa. Entregamos una réplica y evidencia; permanecen límites por resolver.</p></aside>
+        </article>
+      </div>
+
+      <nav class="deck-controls" aria-label="Controles de diapositivas">
+        <button class="deck-control" id="previous-slide" type="button" aria-label="Diapositiva anterior">← Anterior</button>
+        <span id="slide-counter" aria-live="polite">1 / 8</span>
+        <button class="deck-control" id="next-slide" type="button" aria-label="Diapositiva siguiente">Siguiente →</button>
+        <button class="deck-control" id="toggle-speaker-notes" type="button" aria-pressed="false">Mostrar guion del expositor</button>
+        <button class="deck-control deck-fullscreen" id="fullscreen-deck" type="button">Pantalla completa</button>
+        <button class="deck-control" id="print-deck" type="button">Imprimir / PDF</button>
+      </nav>
+      <p class="deck-hint">Usa ← y → para cambiar de diapositiva; F activa pantalla completa; Esc vuelve a la página. El guion de apoyo no se muestra al proyectar; también puedes descargarlo para ensayar.</p>
+    </section>
+  </main>
+</body>
+</html>
